@@ -24,9 +24,9 @@ $('#facebookLogout').click(function(){
      $('#facebookLogin').hide();
      $('#facebookLogout').show();
      // Logged into your app and Facebook.
-     if(verifyScope()){
+
         testAPI();
-     }
+
    } else if (response.status === 'not_authorized') {
      // The person is logged into Facebook, but not your app.
      document.getElementById('status').innerHTML = 'Please log ' +
@@ -99,25 +99,4 @@ $('#facebookLogout').click(function(){
    });
  }
 
- function verifyScope(){
-   FB.api('/me/permissions', function(response) {
-     console.log(response);
-     console.log(scope);
-     var declined = [];
-      for (i = 0; i < response.data.length; i++) {
-        if (response.data[i].status == 'declined') {
-          declined.push(response.data[i].permission)
-        }
-      }
-      if(declined.length > 0){
-        FB.login(function(response) {
-    //
-        }, {
-            scope: declined.join(),auth_type: 'auth_nonce'
-        });
-      }else{
-        return true;
-      }
-   });
- }
 });
