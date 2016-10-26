@@ -14,8 +14,8 @@
       <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
       <div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="false"></div>-->
       <div id="button">
-        <button id="facebookLogin">Se connecter</button>
-        <button id="facebookLogout">Se déconnecter</button>
+        <button id="login">Se connecter</button>
+        <button id="logout">Se déconnecter</button>
       </div>
       <div id="status">
 </div>
