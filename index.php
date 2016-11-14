@@ -6,7 +6,7 @@
     <title>Facebook</title>
     <meta name="description" content="ceci est mon app facebook">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <script src="public/js/script.js"></script>
+    <script src="fb-esgi-cours/public/js/script.js"></script>
   </head>
   <body>
       <h1>Application Facebook</h1>

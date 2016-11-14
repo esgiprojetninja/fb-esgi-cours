@@ -1,6 +1,8 @@
 $(document).ready(function(){
 
-  var scope = ["public_profile","email"];
+    var scope = ["public_profile","email"];
+    var maxNumberAskingScope = 1;
+    var numberAskingScope = 0;
 
 $('#facebookLogin').click(function(){
   FB.login(function(response) {
@@ -13,35 +15,35 @@ $('#facebookLogout').click(function(){
     statusChangeCallback(response);
   });
 })
- function statusChangeCallback(response) {
-   console.log('statusChangeCallback');
-   console.log(response);
-   // The response object is returned with a status field that lets the
-   // app know the current login status of the person.
-   // Full docs on the response object can be found in the documentation
-   // for FB.getLoginStatus().
-   if (response.status === 'connected') {
-     $('#facebookLogin').hide();
-     $('#facebookLogout').show();
+function statusChangeCallback(response) {
+    console.log('statusChangeCallback');
+    console.log(response);
+    // The response object is returned with a status field that lets the
+    // app know the current login status of the person.
+    // Full docs on the response object can be found in the documentation
+    // for FB.getLoginStatus().
+    if (response.status === 'connected') {
+    //  $('#facebookLogin').hide();
+    //  $('#facebookLogout').show();
      // Logged into your app and Facebook.
      if(verifyScope()){
         testAPI();
      }
-   } else if (response.status === 'not_authorized') {
+    } else if (response.status === 'not_authorized') {
      // The person is logged into Facebook, but not your app.
      document.getElementById('status').innerHTML = 'Please log ' +
        'into this app.';
        $('#facebookLogin').show();
        $('#facebookLogout').hide();
-   } else {
+    } else {
      // The person is not logged into Facebook, so we're not sure if
      // they are logged into this app or not.
      document.getElementById('status').innerHTML = 'Please log ' +
        'into Facebook.';
        $('#facebookLogin').show();
        $('#facebookLogout').hide();
-   }
- }
+    }
+}
 
  // This function is called when someone finishes with the Login
  // Button.  See the onlogin handler attached to it in the sample
@@ -54,7 +56,7 @@ $('#facebookLogout').click(function(){
 
  window.fbAsyncInit = function() {
  FB.init({
-   appId      : '1462037537430458',
+   appId      : '1104704252970306',
    cookie     : true,  // enable cookies to allow the server to access
                        // the session
    xfbml      : true,  // parse social plugins on this page
@@ -101,23 +103,37 @@ $('#facebookLogout').click(function(){
 
  function verifyScope(){
    FB.api('/me/permissions', function(response) {
-     console.log(response);
-     console.log(scope);
-     var declined = [];
-      for (i = 0; i < response.data.length; i++) {
-        if (response.data[i].status == 'declined') {
-          declined.push(response.data[i].permission)
-        }
-      }
-      if(declined.length > 0){
-        FB.login(function(response) {
-    //
-        }, {
-            scope: declined.join(),auth_type: 'auth_nonce'
-        });
+      var granted = response.data.reduce(function (grant, perm) {
+          if (perm.status === "granted") {
+               return grant.concat(perm.permission);
+          }
+          return grant;
+      }, []);
+      var error = false;
+      scope.map(function (perm) {
+          if (!$.inArray(perm, granted)) {
+            error = true;
+          }
+      });
+      if(error){
+        authAgain();
       }else{
-        return true;
+          $("#login").hide();
+          $("#logout").show();
+          callback();
       }
    });
  }
+
+
+ function authAgain(){
+    if(numberAskingScope < maxNumberAskingScope){
+      FB.login(function(response){
+        checkLoginState();
+      },{scope:scope.join(), auth_type: "rerequest"});
+      numberAskingScope++;
+    }else{
+      alert("Vous devez accepter les permissions !!!")
+    }
+  }
 });
