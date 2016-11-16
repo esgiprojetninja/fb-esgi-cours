@@ -12,7 +12,9 @@ $fb =  new Facebook\Facebook([
 
 $helper = $fb->getRedirectLoginHelper();
 $permissionsNeed = ["email","user_likes"];
+
 $loginUrl = $helper->getLoginUrl("http://localhost:8888/facebook2/login-callback.php",$permissionsNeed);
+$reLoginUrl =  $helper->getReRequestUrl("http://localhost:8888/facebook2/login-callback.php",$permissionsNeed);
 /*
 {
 "data": [
@@ -34,6 +36,8 @@ $loginUrl = $helper->getLoginUrl("http://localhost:8888/facebook2/login-callback
 <body>
   <h1>Application Facebook test</h1>
   <?php
+  $status = 0;
+  
   if(isset($_SESSION['facebook_access_token'])){
     $fb->setDefaultAccessToken($_SESSION['facebook_access_token']);
     //$response = $fb->get('/me?fields=email,name');
@@ -59,18 +63,15 @@ $loginUrl = $helper->getLoginUrl("http://localhost:8888/facebook2/login-callback
     if($error){
       $status = 2;
     }else{
-      $status =1;
+      $status =1 ;
     }
-  }else{
-    $status = 0;
   }
-
   ?>
 
   <?php if($status ===1 ): ?>
     <a href="logout.php">Se déconnecter</a>
   <?php elseif($status === 2): ?>
-    <a href="<?php echo $fb->getLoginUrlAgain(); ?>">Se connecter</a>
+    <a href="<?php echo $reLoginUrl; ?>">Se connecter</a>
   <?php else: ?>
     <a href="<?php echo $loginUrl; ?>">Se connecter</a>
   <?php endif; ?>
