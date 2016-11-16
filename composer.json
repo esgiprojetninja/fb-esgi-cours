@@ -1,0 +1,13 @@
+{
+    "name": "gorfy/facebook2",
+    "description": "df",
+    "authors": [
+        {
+            "name": "GoRFy",
+            "email": "lambot.rom@gmail.com"
+        }
+    ],
+    "require": {
+      "facebook/graph-sdk": "~5.0"
+    }
+}
