@@ -11,20 +11,11 @@ $fb =  new Facebook\Facebook([
 ]);
 
 $helper = $fb->getRedirectLoginHelper();
-$permissionsNeed = ["email","user_likes"];
+$permissionsNeed = ["email","user_likes","user_photos"];
 
 $loginUrl = $helper->getLoginUrl("http://localhost:8888/facebook2/login-callback.php",$permissionsNeed);
 $reLoginUrl =  $helper->getReRequestUrl("http://localhost:8888/facebook2/login-callback.php",$permissionsNeed);
-/*
-{
-"data": [
-{
-"permission": "user_birthday",
-"status": "granted"
-},
-]
-}
-*/
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,7 +28,7 @@ $reLoginUrl =  $helper->getReRequestUrl("http://localhost:8888/facebook2/login-c
   <h1>Application Facebook test</h1>
   <?php
   $status = 0;
-  
+
   if(isset($_SESSION['facebook_access_token'])){
     $fb->setDefaultAccessToken($_SESSION['facebook_access_token']);
     //$response = $fb->get('/me?fields=email,name');
@@ -70,6 +61,19 @@ $reLoginUrl =  $helper->getReRequestUrl("http://localhost:8888/facebook2/login-c
 
   <?php if($status ===1 ): ?>
     <a href="logout.php">Se déconnecter</a>
+    <?php
+      //$fb->getUser();
+      $photos = $fb->get('/me?fields=albums{name,photos}');
+      $photos = $photos->getGraphUser();
+      //var_dump($photos);
+      echo '<pre>';
+      print_r($photos);
+      foreach($photos as $photo){
+        print_r($photo);
+      }
+
+    ?>
+    <!-- ALL PHOTOS USER -->
   <?php elseif($status === 2): ?>
     <a href="<?php echo $reLoginUrl; ?>">Se connecter</a>
   <?php else: ?>
